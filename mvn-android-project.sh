@@ -86,7 +86,7 @@ out
 *.jar.properties
 EOF
 
-# Create checkstyle files
+# Setup Checkstyle Plugin
 mkdir $2/config/
 mkdir $2/config/quality
 checkstyledir=$2/config/quality/checkstyle
@@ -247,8 +247,65 @@ checkstyle_declaration='            <plugin>
 
 printf '%s\n' H 80i "$checkstyle_declaration" . wq | ed -s $2/$2/pom.xml
 
+# Setup FindBugs Plugin
+findbugsdir=$2/config/quality/findbugs
+
+mkdir $findbugsdir
+
+cat > $findbugsdir/findbugs-filter.xml << EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+    <!-- http://stackoverflow.com/questions/7568579/eclipsefindbugs-exclude-filter-files-doesnt-work -->
+    <Match>
+        <Class name="~.*\.R\$.*"/>
+    </Match>
+    <Match>
+        <Class name="~.*\.Manifest\$.*"/>
+    </Match>
+    <!-- All bugs in test classes, except for JUnit-specific bugs -->
+    <Match>
+        <Class name="~.*\.*Test" />
+        <Not>
+            <Bug code="IJU" />
+        </Not>
+    </Match>
+</FindBugsFilter>
+EOF
+
+findbugs_plugin='                   <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>findbugs-maven-plugin</artifactId>
+                    <version>${findbugs-maven-plugin.version}</version>
+                    <configuration>
+                        <!--<xmlOutput>true</xmlOutput>-->
+                        <skip>false</skip>
+                        <failOnError>true</failOnError>
+                        <threshold>High</threshold>
+                        <excludeFilterFile>config/quality/findbugs/findbugs-filter.xml</excludeFilterFile>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>findbugs-check</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>'
+
+printf '%s\n' H 98i "$findbugs_plugin" . wq | ed -s $2/pom.xml
+
+findbugs_version='        <findbugs-maven-plugin.version>2.5.2</findbugs-maven-plugin.version>'
+printf '%s\n' H 16i "$findbugs_version" . wq | ed -s $2/pom.xml
+
+findbugs_declaration='            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                </plugin>'
+
+printf '%s\n' H 84i "$findbugs_declaration" . wq | ed -s $2/$2/pom.xml
+
 echo "**** Successfully created your maven android project in $2/ ****"
 
 exit 0;
-
-
