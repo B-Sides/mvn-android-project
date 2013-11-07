@@ -307,7 +307,7 @@ findbugs_declaration='            <plugin>
 printf '%s\n' H 84i "$findbugs_declaration" . wq | ed -s $2/$2/pom.xml
 
 #Removes offending checkstyle error. (Unused import)
-(echo "g/import android.util.Log/d"; echo 'wq') | ex -s $2/$2/src/main/java/com/project/HelloAndroidActivity.java
+find . -name "HelloAndroidActivity.java" -exec sed -i '' '5 d' {} \;
 
 echo "**** Successfully created your maven android project in $2/ ****"
 
