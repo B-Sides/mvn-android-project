@@ -12,6 +12,8 @@ android_platform=14
 android_plugin_version=3.7.0
 android_project_version=1.0-SNAPSHOT
 archetype_version=1.0.11
+checkstyle_plugin_version=2.9.1
+findbugs_plugin_version=2.5.2
 
 if [[ $1 = help || -z $1 ]]; then
   echo "usage: mvn-android-project com.mycompany project-name";
@@ -234,8 +236,8 @@ plugin_checkstyle='              <plugin>
 
 printf '%s\n' H 75i "$plugin_checkstyle" . wq | ed -s $2/pom.xml
 
-checkstyle_version='        <maven-checkstyle-plugin.version>2.9.1</maven-checkstyle-plugin.version>'
-printf '%s\n' H 15i "$checkstyle_version" . wq | ed -s $2/pom.xml
+checkstyle_pom_version="        <maven-checkstyle-plugin.version>${checkstyle_plugin_version}</maven-checkstyle-plugin.version>"
+printf '%s\n' H 15i "$checkstyle_pom_version" . wq | ed -s $2/pom.xml
 
 checkstyle_declaration='            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -293,8 +295,8 @@ findbugs_plugin='                   <plugin>
 
 printf '%s\n' H 98i "$findbugs_plugin" . wq | ed -s $2/pom.xml
 
-findbugs_version='        <findbugs-maven-plugin.version>2.5.2</findbugs-maven-plugin.version>'
-printf '%s\n' H 16i "$findbugs_version" . wq | ed -s $2/pom.xml
+findbugs_pom_version="        <findbugs-maven-plugin.version>${findbugs_plugin_version}</findbugs-maven-plugin.version>"
+printf '%s\n' H 16i "$findbugs_pom_version" . wq | ed -s $2/pom.xml
 
 findbugs_declaration='            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
