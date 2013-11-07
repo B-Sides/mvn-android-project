@@ -14,6 +14,7 @@ android_project_version=1.0-SNAPSHOT
 archetype_version=1.0.11
 checkstyle_plugin_version=2.9.1
 findbugs_plugin_version=2.5.2
+robolectric_version=2.2
 
 if [[ $1 = help || -z $1 ]]; then
   echo "usage: mvn-android-project com.mycompany project-name";
@@ -307,6 +308,43 @@ printf '%s\n' H 84i "$findbugs_declaration" . wq | ed -s $2/$2/pom.xml
 
 #Removes offending checkstyle error. (Unused import)
 find . -name "HelloAndroidActivity.java" -exec sed -i '' '5 d' {} \;
+
+# Setup Robolectric
+robolectric_dependency='            <dependency>
+                <groupId>org.robolectric</groupId>
+                <artifactId>robolectric</artifactId>
+                <version>${robolectric.version}</version>
+                <classifier>jar-with-dependencies</classifier>
+                </dependency>'
+
+printf '%s\n' H 40i "$robolectric_dependency" . wq | ed -s $2/pom.xml
+
+robolectric_pom_version="        <robolectric.version>${robolectric_version}</robolectric.version>"
+
+printf '%s\n' H 16i "$robolectric_pom_version" . wq | ed -s $2/pom.xml
+
+# Generate Robolectric config file.
+testdir=$2/$2/src/test
+mkdir $testdir
+mkdir $testdir/java
+mkdir $testdir/resources
+cat > $testdir/resources/org.robolectric.Config.properties << EOF
+manifest: ../$2/AndroidManifest.xml
+EOF
+
+testing_dependencies='         <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.robolectric</groupId>
+            <artifactId>robolectric</artifactId>
+            <classifier>jar-with-dependencies</classifier>
+            <scope>test</scope>
+        </dependency>'
+
+printf '%s\n' H 24i "$testing_dependencies" . wq | ed -s $2/$2/pom.xml       
 
 echo "**** Successfully created your maven android project in $2/ ****"
 
