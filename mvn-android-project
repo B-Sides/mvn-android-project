@@ -1,27 +1,24 @@
 #!/bin/bash
 
-# Builds a maven android project using the input package name and artifactId.
-# buld-android-project com.package.name my-project-name
+# Generates an android project with maven configured as the build system. 
+# The project is structured as two modules, the main project and a project
+# for integration testing. 
+# 
+# The project is preconfigured to run Checkstyle and FindBugs during a build.
+#
+# Synopsis: mvn-android-project com.mycompany project-name
 
 android_platform=14
 android_plugin_version=3.7.0
 android_project_version=1.0-SNAPSHOT
 archetype_version=1.0.11
 
-if [[ $1 = help ]]; then
-  echo "Call this way:";
-  echo "mvn-android-project com.project.package my-project-name";
+if [[ $1 = help || -z $1 ]]; then
+  echo "usage: mvn-android-project com.mycompany project-name";
   exit 0;
 fi
 
-# check if the user provided an argument
-if [ -z $1 ]; then
-    echo "Call this way:";
-    echo "mvn-android-project com.project.package my-project-name"
-    exit 0;
-fi
-
-echo "Creating your android maven project... Please wait."
+echo "Generating your maven android project... Please wait."
 
 yes "" | mvn archetype:generate \
   -DarchetypeArtifactId=android-release \
