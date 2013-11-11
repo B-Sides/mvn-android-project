@@ -15,6 +15,7 @@ archetype_version=1.0.11
 checkstyle_plugin_version=2.9.1
 findbugs_plugin_version=2.5.2
 robolectric_version=2.2
+robotium_version=4.3
 
 if [[ $1 = help || -z $1 ]]; then
   echo "usage: mvn-android-project com.mycompany project-name";
@@ -344,7 +345,25 @@ testing_dependencies='         <dependency>
             <scope>test</scope>
         </dependency>'
 
-printf '%s\n' H 24i "$testing_dependencies" . wq | ed -s $2/$2/pom.xml       
+printf '%s\n' H 24i "$testing_dependencies" . wq | ed -s $2/$2/pom.xml   
+
+robotium_parent_pom_dependency='         <dependency>
+                <groupId>com.jayway.android.robotium</groupId>
+                <artifactId>robotium-solo</artifactId>
+                <version>${robotium.version}</version>
+            </dependency>' 
+
+printf '%s\n' H 47i "$robotium_parent_pom_dependency" . wq | ed -s $2/pom.xml
+
+robotium_parent_pom_version="        <robotium.version>${robotium_version}</robotium.version>"
+printf '%s\n' H 16i "$robotium_parent_pom_version" . wq | ed -s $2/pom.xml
+
+robotium_test_project_pom_dependency='         <dependency>
+                <groupId>com.jayway.android.robotium</groupId>
+                <artifactId>robotium-solo</artifactId>
+            </dependency>'
+
+printf '%s\n' H 38i "$robotium_test_project_pom_dependency" . wq | ed -s $2/$2-it/pom.xml
 
 echo "**** Successfully created your maven android project in $2/ ****"
 

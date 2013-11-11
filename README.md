@@ -9,6 +9,8 @@ The following are features configured as part of the build:
 
 ## Testing
 * [Robolectric](https://github.com/robolectric/robolectric) - A unit test framework that de-fangs the Android SDK so you can test-drive the development of your Android app
+* [Robotium](Insert Link here) - A integration test framework. 
+
 
 ##Usage
 In Bash run: **./mvn-android-project com.mycompany my-project-name**
