@@ -90,10 +90,8 @@ out
 EOF
 
 # Setup Checkstyle Plugin
-mkdir $2/config/
-mkdir $2/config/quality
 checkstyledir=$2/config/quality/checkstyle
-mkdir $checkstyledir
+mkdir -p $checkstyledir
 
 touch $checkstyledir/checkstyle.xml
 touch $checkstyledir/supressions.xml
@@ -252,7 +250,6 @@ printf '%s\n' H 80i "$checkstyle_declaration" . wq | ed -s $2/$2/pom.xml
 
 # Setup FindBugs Plugin
 findbugsdir=$2/config/quality/findbugs
-
 mkdir $findbugsdir
 
 cat > $findbugsdir/findbugs-filter.xml << EOF
@@ -328,8 +325,7 @@ printf '%s\n' H 16i "$robolectric_pom_version" . wq | ed -s $2/pom.xml
 
 # Generate Robolectric config file.
 testdir=$2/$2/src/test
-mkdir $testdir
-mkdir $testdir/java
+mkdir -p $testdir/java
 mkdir $testdir/resources
 cat > $testdir/resources/org.robolectric.Config.properties << EOF
 manifest: ../$2/AndroidManifest.xml
