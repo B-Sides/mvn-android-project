@@ -16,6 +16,8 @@ checkstyle_plugin_version=2.9.1
 findbugs_plugin_version=2.5.2
 robolectric_version=2.2
 robotium_version=4.3
+spoon_plugin_version=1.0.5
+spoon_client_version=1.0.5
 
 if [[ $1 = help || -z $1 ]]; then
   echo "usage: mvn-android-project com.mycompany project-name";
@@ -364,6 +366,59 @@ robotium_test_project_pom_dependency='         <dependency>
             </dependency>'
 
 printf '%s\n' H 38i "$robotium_test_project_pom_dependency" . wq | ed -s $2/$2-it/pom.xml
+
+spoon_plugin_parent_pom="                <plugin>
+                    <groupId>com.squareup.spoon</groupId>
+                    <artifactId>spoon-maven-plugin</artifactId>
+                    <version>\${spoon.plugin.version}</version>
+                    <configuration>
+                        <title>$2</title>
+                        <failOnFailure>true</failOnFailure>
+                        <debug>true</debug>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <phase>integration-test</phase>
+                            <goals>
+                                <goal>run</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>"
+
+printf '%s\n' H 133i "$spoon_plugin_parent_pom" . wq | ed -s $2/pom.xml
+
+# Need to add plugin to testing project and add skiptest configuration to maven-android-plugin
+spoon_client_parent_pom='         <dependency>
+                <groupId>com.squareup.spoon</groupId>
+                <artifactId>spoon-client</artifactId>
+                <version>${spoon.client.version}</version>
+                </dependency>'
+
+printf '%s\n' H 53i "$spoon_client_parent_pom" . wq | ed -s $2/pom.xml
+
+spoon_versions_parent_pom='        <spoon.client.version>1.0.5</spoon.client.version>
+                <spoon.plugin.version>1.0.5</spoon.plugin.version>'
+
+printf '%s\n' H 20i "$spoon_versions_parent_pom" . wq | ed -s $2/pom.xml
+
+spoon_client_test_pom='         <dependency>
+            <groupId>com.squareup.spoon</groupId>
+            <artifactId>spoon-client</artifactId>
+            </dependency>'
+
+printf '%s\n' H 42i "$spoon_client_test_pom" . wq | ed -s $2/$2-it/pom.xml
+
+spoon_plugin_test_pom='            <plugin>
+                <groupId>com.squareup.spoon</groupId>
+                <artifactId>spoon-maven-plugin</artifactId>
+            </plugin>'
+
+printf '%s\n' H 51i "$spoon_plugin_test_pom" . wq | ed -s $2/$2-it/pom.xml                            
+
+maven_plugin_skip_test='                        <skip>true</skip>'
+
+printf '%s\n' H 70i "$maven_plugin_skip_test" . wq | ed -s $2/$2-it/pom.xml
 
 echo "**** Successfully created your maven android project in $2/ ****"
 
