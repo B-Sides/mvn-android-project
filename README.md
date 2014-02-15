@@ -17,4 +17,4 @@ The following features are configured as part of the build:
 In Bash run: **./mvn-android-project com.mycompany my-project-name**
 
 ##Notes
-This script has been tested with maven 3.0.5.
+The generated project requires Maven 3.1.1+. See the [android-maven-plugin changelog](https://code.google.com/p/maven-android-plugin/wiki/Changelog) for details.

@@ -9,15 +9,15 @@
 # Synopsis: mvn-android-project com.mycompany project-name
 
 android_platform=14
-android_plugin_version=3.7.0
+android_plugin_version=3.8.2
 android_project_version=1.0-SNAPSHOT
 archetype_version=1.0.11
 checkstyle_plugin_version=2.9.1
 findbugs_plugin_version=2.5.2
 robolectric_version=2.2
 robotium_version=4.3
-spoon_plugin_version=1.0.5
-spoon_client_version=1.0.5
+spoon_plugin_version=1.1.1
+spoon_client_version=1.1.1
 
 if [[ $1 = help || -z $1 ]]; then
   echo "usage: mvn-android-project com.mycompany project-name";
@@ -393,8 +393,8 @@ spoon_client_parent_pom='         <dependency>
 
 printf '%s\n' H 53i "$spoon_client_parent_pom" . wq | ed -s $2/pom.xml
 
-spoon_versions_parent_pom='        <spoon.client.version>1.0.5</spoon.client.version>
-                <spoon.plugin.version>1.0.5</spoon.plugin.version>'
+spoon_versions_parent_pom="        <spoon.client.version>$spoon_client_version</spoon.client.version>
+                <spoon.plugin.version>$spoon_plugin_version</spoon.plugin.version>"
 
 printf '%s\n' H 20i "$spoon_versions_parent_pom" . wq | ed -s $2/pom.xml
 
